@@ -1,28 +1,30 @@
-import express from "express";
-import QRCode from "qrcode";
-import path from "path";
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import QRCode from "npm:qrcode";
 
-const PUBLIC_DIR_PATH = path.join(__dirname, "./public");
+serve(
+  async (req) => {
+    const url = new URL(req.url);
 
-const app = express();
+    // Serve frontend
+    if (req.method === "GET" && url.pathname === "/") {
+      const html = await Deno.readTextFile("./public/index.html");
+      return new Response(html, {
+        headers: { "content-type": "text/html" },
+      });
+    }
 
-app.use(express.json());
+    // API endpoint
+    if (req.method === "POST" && url.pathname === "/generate") {
+      const { ssid, password, security } = await req.json();
 
-app.use(express.static(PUBLIC_DIR_PATH));
+      const wifiString = `WIFI:T:${security};S:${ssid};P:${password};;`;
 
-app.post("/generate", async (req, res) => {
-  const { ssid, password, security } = req.body;
+      const qr = await QRCode.toDataURL(wifiString);
 
-  const wifiString = `WIFI:T:${security};S:${ssid};P:${password};;`;
+      return Response.json({ qr });
+    }
 
-  try {
-    const qr = await QRCode.toDataURL(wifiString);
-    res.json({ qr });
-  } catch (err) {
-    res.status(500).send("QR generation failed");
-  }
-});
-
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
+    return new Response("Not Found", { status: 404 });
+  },
+  { port: 3000 },
+);
