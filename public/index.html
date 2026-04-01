@@ -1,0 +1,31 @@
+<form id="form">
+  <input placeholder="SSID" id="ssid" required />
+  <input placeholder="Password" id="password" />
+  <select id="security">
+    <option value="WPA">WPA/WPA2</option>
+    <option value="WEP">WEP</option>
+    <option value="nopass">Open</option>
+  </select>
+  <button type="submit">Generate</button>
+</form>
+
+<img id="qr" />
+
+<script>
+  document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await fetch("/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ssid: ssid.value,
+        password: password.value,
+        security: security.value,
+      }),
+    });
+
+    const data = await res.json();
+    document.getElementById("qr").src = data.qr;
+  };
+</script>
