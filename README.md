@@ -48,3 +48,9 @@ iwr https://deno.land/install.ps1 -useb | iex
 # Verify installation
 deno --version
 ```
+
+# 4. Run
+
+```bash
+$ deno run --allow-net --allow-read app.ts
+```

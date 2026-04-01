@@ -1,31 +1,191 @@
-<form id="form">
-  <input placeholder="SSID" id="ssid" required />
-  <input placeholder="Password" id="password" />
-  <select id="security">
-    <option value="WPA">WPA/WPA2</option>
-    <option value="WEP">WEP</option>
-    <option value="nopass">Open</option>
-  </select>
-  <button type="submit">Generate</button>
-</form>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wi-Fi QR Generator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Reset + base styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: #333;
+      }
 
-<img id="qr" />
+      /* Container */
+      .container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        width: 350px;
+        max-width: 90vw;
+      }
 
-<script>
-  document.getElementById("form").onsubmit = async (e) => {
-    e.preventDefault();
+      h1 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #4facfe;
+      }
 
-    const res = await fetch("/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ssid: ssid.value,
-        password: password.value,
-        security: security.value,
-      }),
-    });
+      /* Form */
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      input,
+      select,
+      button {
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+      button {
+        background: #4facfe;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #00f2fe;
+      }
 
-    const data = await res.json();
-    document.getElementById("qr").src = data.qr;
-  };
-</script>
+      /* QR display */
+      #qr-container {
+        margin-top: 1.5rem;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      /* Loading animation */
+      .loading {
+        display: none;
+        margin-top: 1rem;
+      }
+      .loading img {
+        width: 50px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      img.wifi-img {
+        width: 100px;
+        margin-bottom: 1rem;
+      }
+
+      /* Fade in for QR */
+      #qr-container.show {
+        display: flex;
+        animation: fadeIn 0.5s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="images/wifi.svg" class="wifi-img" alt="WiFi illustration" />
+      <h1>WiFi QR Generator</h1>
+
+      <form id="wifi-form">
+        <input type="text" name="ssid" placeholder="SSID" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <select name="security" required>
+          <option value="WPA">WPA/WPA2</option>
+          <option value="WEP">WEP</option>
+          <option value="nopass">No password</option>
+        </select>
+        <button type="submit">Generate QR</button>
+      </form>
+
+      <div class="loading" id="loading">
+        <img src="images/loading.svg" alt="Loading..." />
+      </div>
+
+      <div id="qr-container">
+        <img id="qr" alt="QR Code" />
+        <a id="download" download="wifi.png">Download QR</a>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("wifi-form");
+      const qrContainer = document.getElementById("qr-container");
+      const qrImg = document.getElementById("qr");
+      const loading = document.getElementById("loading");
+      const download = document.getElementById("download");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        qrContainer.classList.remove("show");
+        loading.style.display = "block";
+
+        const formData = new FormData(form);
+        const body = {
+          ssid: formData.get("ssid"),
+          password: formData.get("password"),
+          security: formData.get("security"),
+        };
+
+        try {
+          const res = await fetch("/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+          const data = await res.json();
+          qrImg.src = data.qr;
+          download.href = data.qr;
+
+          loading.style.display = "none";
+          qrContainer.classList.add("show");
+        } catch (err) {
+          loading.style.display = "none";
+          alert("Failed to generate QR code. Check console for details.");
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>
