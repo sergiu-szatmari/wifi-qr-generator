@@ -1,4 +1,4 @@
-import type { WifiSecurity } from "../types.d.ts";
+import type { WifiSecurity } from "./types.ts";
 
 const getEnv = (key: string, fallback?: string): string => {
   return Deno.env.get(key) ?? fallback ?? "";

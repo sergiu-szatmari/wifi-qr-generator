@@ -1,11 +1,8 @@
 import QRCode from "npm:qrcode";
 import type { GenerateWifiQrRequest } from "../types.ts";
 
-export const buildWifiQrString = ({
-  ssid,
-  password,
-  security,
-}: GenerateWifiQrRequest): string => {
+const buildWifiQrString = (args: GenerateWifiQrRequest): string => {
+  const { ssid, password, security } = args;
   const safeSsid = ssid.trim();
   const safePassword = password?.trim() ?? "";
 
@@ -21,5 +18,5 @@ export const generateWifiQrDataUrl = async (
 ): Promise<string> => {
   const wifiQrString = buildWifiQrString(input);
 
-  return await QRCode.toDataURL(wifiQrString);
+  return QRCode.toDataURL(wifiQrString);
 };

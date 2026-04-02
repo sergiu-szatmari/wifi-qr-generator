@@ -3,7 +3,7 @@ import { json } from "../utils/response.ts";
 
 export const healthHandler: HttpHandler = () => {
   return json({
-    status: "ok",
+    status: "OK",
     service: "wifi-qr-generator",
   });
 };

@@ -39,3 +39,19 @@ export type GenerateWifiQrResponse = {
 export type ErrorResponse = {
   error: string;
 };
+
+export interface IRouter {
+  // private routes: RouteDefinition[];
+  // private register(routeDefinition: RouteDefinition):void;
+
+  get(path: string, handler: HttpHandler): void;
+  post(path: string, handler: HttpHandler): void;
+  put(path: string, handler: HttpHandler): void;
+  patch(path: string, handler: HttpHandler): void;
+  delete(path: string, handler: HttpHandler): void;
+  options(path: string, handler: HttpHandler): void;
+
+  find(request: Request): HttpHandler | null;
+
+  handle(request: Request): Response | Promise<Response>;
+}
