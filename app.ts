@@ -11,14 +11,8 @@ serve(
     }
 
     // API endpoint
-    if (req.method === "POST" && url.pathname === "/generate") {
-      const { ssid, password, security } = await req.json();
-
-      const wifiString = `WIFI:T:${security};S:${ssid};P:${password};;`;
-
-      const qr = await QRCode.toDataURL(wifiString);
-
-      return Response.json({ qr });
+    if (req.method === "POST") {
+      return postHandler(url, req);
     }
 
     return new Response("Not Found", { status: 404 });
@@ -26,36 +20,50 @@ serve(
   { port: 3000 },
 );
 
-async function getHandler(url: URL) {
-  let filePath = `./public${url.pathname}`;
-  if (url.pathname === "/") filePath = "./public/index.html";
-
+async function getHandler(url: URL): Promise<Response> {
   try {
-    const file = await Deno.readFile(filePath);
-    const ext = filePath.split(".").pop()?.toLowerCase();
-    const contentType =
-      ext === "html"
-        ? "text/html"
-        : ext === "css"
-          ? "text/css"
-          : ext === "js"
-            ? "text/javascript"
-            : ext === "svg"
-              ? "image/svg+xml"
-              : ext === "png"
-                ? "image/png"
-                : ext === "ico"
-                  ? "image/x-icon"
-                  : "application/octet-stream";
+    const path = url.pathname.includes("favicon")
+      ? "./public/favicon.ico" // Buggy favicon fetch handling
+      : url.pathname === "/"
+        ? "./public/index.html" // UI Handling
+        : `./public${url.pathname}`; // Static assets handling
+
+    const file = await Deno.readTextFile(path);
+
+    const ext = path.split(".").pop()?.toLowerCase();
+    const contentType = getContentType(ext);
 
     return new Response(file, { headers: { "content-type": contentType } });
-  } catch {
+  } catch (err) {
+    console.error(err);
     return new Response("Not Found", { status: 404 });
   }
-  /////////////////////
-  ///
-  if (url.pathname !== "/") throw new Error(`unhandled path "${url.pathname}"`);
+}
 
-  const html = await Deno.readTextFile("./public/index.html");
-  return new Response(html, { headers: { "content-type": "text/html" } });
+async function postHandler(url: URL, req: Request): Promise<Response> {
+  if (url.pathname !== "/generate") {
+    return new Response("Not Found", { status: 404 });
+  }
+
+  const { ssid, password, security } = await req.json();
+  const wifiString = `WIFI:T:${security};S:${ssid};P:${password};;`;
+
+  const qr = await QRCode.toDataURL(wifiString);
+
+  return Response.json({ qr });
+}
+
+function getContentType(ext?: string) {
+  if (!ext) return "application/octet-stream";
+
+  const contentType = {
+    html: "text/html",
+    css: "text/css",
+    js: "text/javascript",
+    svg: "image/svg+xml",
+    png: "image/png",
+    ico: "image/x-icon",
+  }[ext];
+
+  return contentType ?? "application/octet-stream";
 }

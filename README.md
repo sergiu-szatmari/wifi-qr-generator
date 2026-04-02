@@ -35,7 +35,7 @@ deno --version
 
 - Replaced `Express` with Deno native `serve()`
 - Used `import QRCode from "npm:qrcode"`
-- Ran with: `deno run --allow-net --allow-read app.ts`
+- Ran with: `deno run --allow-net --allow-read --watch app.ts`
 - Implemented:
   - API Endpoint: `POST /generate` → returns QR code (in base64 format)
   - static file serving from `/public/**`
@@ -67,3 +67,4 @@ deno --version
 
 - Illustrations provided by [unDraw](https://undraw.co/) — free, open-source SVG illustrations
 - Loading animations generated with [loading.io](https://loading.io/)
+- Favicon provided by [FlatIcon](https://www.flaticon.com/)
