@@ -35,7 +35,7 @@ deno --version
 
 - Replaced `Express` with Deno native `serve()`
 - Used `import QRCode from "npm:qrcode"`
-- Ran with: `deno run --allow-net --allow-read --watch app.ts`
+- Ran with: `deno run --allow-net --allow-read --watch server.ts`
 - Implemented:
   - API Endpoint: `POST /generate` → returns QR code (in base64 format)
   - static file serving from `/public/**`

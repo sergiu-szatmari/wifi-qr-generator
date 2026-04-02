@@ -1,0 +1,107 @@
+/* Reset + base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #333;
+}
+
+/* Container */
+.container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 350px;
+  max-width: 90vw;
+}
+
+h1 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #4facfe;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+input,
+select,
+button {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+button {
+  background: #4facfe;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #00f2fe;
+}
+
+/* QR display */
+#qr-container {
+  margin-top: 1.5rem;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Loading animation */
+.loading {
+  display: none;
+  margin-top: 1rem;
+}
+.loading img {
+  width: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+img.wifi-img {
+  width: 100px;
+  margin-bottom: 1rem;
+}
+
+/* Fade in for QR */
+#qr-container.show {
+  display: flex;
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
