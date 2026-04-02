@@ -1,10 +1,7 @@
-import type {
-  ErrorResponse,
-  GenerateWifiQrResponse,
-  HttpHandler,
-} from "../types.ts";
+import type { GenerateWifiQrResponse, HttpHandler } from "../types.ts";
 import { generateWifiQrDataUrl } from "../services/wifi-qr.service.ts";
 import { validateGenerateWifiQrRequest } from "../services/wifi-qr.validation.ts";
+import { badRequest, internalServerError, json } from "../utils/response.ts";
 
 export const qrHandler: HttpHandler = async (request) => {
   try {
@@ -12,18 +9,17 @@ export const qrHandler: HttpHandler = async (request) => {
     const validationResult = validateGenerateWifiQrRequest(body);
 
     if (!validationResult.success) {
-      return Response.json<ErrorResponse>(validationResult.error, {
-        status: 400,
-      });
+      return badRequest(validationResult.error.error);
     }
 
     const qr = await generateWifiQrDataUrl(validationResult.data);
 
-    return Response.json<GenerateWifiQrResponse>({ qr }, { status: 200 });
-  } catch {
-    return Response.json<ErrorResponse>(
-      { error: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return json<GenerateWifiQrResponse>({ qr });
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return badRequest("Invalid JSON body");
+    }
+
+    return internalServerError("Failed to generate QR code");
   }
 };

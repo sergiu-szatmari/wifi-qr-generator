@@ -1,14 +1,13 @@
 import { Router } from "./router.ts";
-import { healthHandler } from "./routes/health.route.ts";
-import { qrHandler } from "./routes/qr.route.ts";
+import { registerRoutes } from "./routes/index.ts";
 import { staticHandler } from "./routes/static.route.ts";
+import { config } from "./config/app.config.ts";
 
 const router = new Router();
-router.get("/health", healthHandler);
-router.post("/api/qr", qrHandler);
+registerRoutes(router);
 
 // Start the server and listen for requests
-Deno.serve({ port: 3000 }, async (request: Request) => {
+Deno.serve({ port: config.port }, async (request: Request) => {
   const handler = router.find(request);
   if (handler) return handler(request);
 

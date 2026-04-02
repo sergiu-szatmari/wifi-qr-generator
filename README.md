@@ -1,5 +1,11 @@
 # wifi-qr-generator
 
+Start app
+
+```bash
+deno run --allow-net --allow-read --allow-env src/server.ts
+```
+
 ## 🧠 Big Picture
 
 Web app for generating QR codes which can be used in connecting to local Wi-Fi. The app was started using **_Node.js + TypeScript_**, and successfully migrated it to **_Deno_**, keeping it as minimal and standalone as possible.
@@ -54,6 +60,12 @@ deno --version
 | `package.json` scripts   | No npm scripts needed; use `deno run`        |
 | `__dirname` / path hacks | Optional `import.meta.url` adjustments       |
 | CommonJS module syntax   | ES Module syntax by default                  |
+
+#### Architecture
+
+- Basic architecture added, similar to Express/Hono. In-house router and handling of static assets fetching.
+- Added some initial environment variables, just for the sake of experimenting with Deno 😅
+- Must be started with: `deno run --allow-net --allow-read --allow-env src/server.ts`
 
 <br/>
 

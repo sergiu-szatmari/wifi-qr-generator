@@ -5,6 +5,9 @@ const qrContainer = $("#qr-container");
 const qrImg = $("#qr");
 const loading = $("#loading");
 const download = $("#download");
+const ssidInput = $('input[name="ssid"]');
+const passwordInput = $('input[name="password"]');
+const securitySelect = $('select[name="security"]');
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -40,3 +43,25 @@ form.addEventListener("submit", async (e) => {
     console.error(err);
   }
 });
+
+async function loadConfig() {
+  try {
+    const res = await fetch("/api/config");
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (!data?.wifi) {
+      console.warn("No data received");
+      return;
+    }
+
+    const { defaultSsid, defaultPassword, defaultSecurity } = data.wifi;
+    if (defaultSsid) ssidInput.value = defaultSsid;
+    if (defaultPassword) passwordInput.value = defaultPassword;
+    if (defaultSecurity) securitySelect.value = defaultSecurity;
+  } catch (err) {
+    console.warn("Config load failed (non-blocking):", err);
+  }
+}
+
+loadConfig();
