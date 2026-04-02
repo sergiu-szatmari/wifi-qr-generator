@@ -4,6 +4,10 @@
 
 Web app for generating QR codes which can be used in connecting to local Wi-Fi. The app was started using **_Node.js + TypeScript_**, and successfully migrated it to **_Deno_**, keeping it as minimal and standalone as possible.
 
+![Demo](./docs/app.gif)
+
+<br/>
+
 ## 🛠️ Deno Setup
 
 ```bash
@@ -51,6 +55,8 @@ deno --version
 | `__dirname` / path hacks | Optional `import.meta.url` adjustments       |
 | CommonJS module syntax   | ES Module syntax by default                  |
 
+<br/>
+
 ## 🎨 Frontend Progress
 
 - Built a minimal **HTML/CSS/JS** UI
@@ -62,6 +68,8 @@ deno --version
   - loading spinner animation
   - fade-in QR display
   - download QR button
+
+<br/>
 
 ## 🙌 Credits
 
