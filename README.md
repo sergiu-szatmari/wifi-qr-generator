@@ -19,6 +19,8 @@ iwr https://deno.land/install.ps1 -useb | iex
 deno --version
 ```
 
+<br/>
+
 ## ⚙️ Backend Progress
 
 - Started with **Node.js + Express + TypeScript**
@@ -60,3 +62,8 @@ deno --version
   - loading spinner animation
   - fade-in QR display
   - download QR button
+
+## 🙌 Credits
+
+- Illustrations provided by [unDraw](https://undraw.co/) — free, open-source SVG illustrations
+- Loading animations generated with [loading.io](https://loading.io/)
