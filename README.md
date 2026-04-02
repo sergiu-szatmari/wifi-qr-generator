@@ -37,7 +37,7 @@ deno --version
 - Fixed:
   - missing/deprecated `@types/qrcode`
   - TS module issues (`CommonJS` vs `ESM`)
-- Added custom `types.d.ts` for `qrcode` lib
+- Added custom ~~`types.d.ts`~~ `types.ts` for `qrcode` lib and as a general type docs
 
 <br/>
 
@@ -80,6 +80,7 @@ deno --version
   - loading spinner animation
   - fade-in QR display
   - download QR button
+- Added fetching a default/preferred SSID-Pass tuple from the backend
 
 <br/>
 
