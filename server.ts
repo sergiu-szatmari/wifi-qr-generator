@@ -1,24 +1,20 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import QRCode from "npm:qrcode";
 
-serve(
-  async (req) => {
-    const url = new URL(req.url);
+import type { HttpHandler } from "./types";
 
-    // Serve frontend
-    if (req.method === "GET") {
+const handler: HttpHandler = async (request) => {
+  const url = new URL(request.url);
+
+  switch (request.method) {
+    case "GET":
       return getHandler(url);
-    }
-
-    // API endpoint
-    if (req.method === "POST") {
-      return postHandler(url, req);
-    }
-
-    return new Response("Not Found", { status: 404 });
-  },
-  { port: 3000 },
-);
+    case "POST":
+      return postHandler(url, request);
+    default:
+      return new Response("Not Found", { status: 404 });
+  }
+};
 
 async function getHandler(url: URL): Promise<Response> {
   try {
@@ -67,3 +63,6 @@ function getContentType(ext?: string) {
 
   return contentType ?? "application/octet-stream";
 }
+
+// Start the server and listen for requests
+serve(handler, { port: 3000 });

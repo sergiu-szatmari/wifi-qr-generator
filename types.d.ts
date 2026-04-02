@@ -7,3 +7,5 @@ declare module "qrcode" {
     options?: any,
   ): Promise<void>;
 }
+
+export type HttpHandler = (request: Request) => Promise<Response> | Response;
