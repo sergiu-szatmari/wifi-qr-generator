@@ -1,44 +1,14 @@
 # wifi-qr-generator
 
-A minimal WiFi QR code generator web app, originally built with Node.js + TypeScript, now migrated to Deno.  
-Primary purpose: generating QR codes to allow devices to connect to your home WiFi quickly.
+## 🧠 Big Picture
 
----
+Web app for generating QR codes which can be used in connecting to local Wi-Fi. The app was started using **_Node.js + TypeScript_**, and successfully migrated it to **_Deno_**, keeping it as minimal and standalone as possible.
 
-## 1. Original Node.js Version
-
-- **Frontend:** Simple HTML form in `public/index.html`
-- **Backend:** Node.js + TypeScript + Express
-  - **Dependencies:** `qrcode` npm package
-  - **Flow:** User opens `/`, submit (SSID & password & security type)
-  3. `/generate` endpoint returns Base64 QR code
-  4. QR code scanned → OS prompts device to join WiFi
-
-**Notes:**
-
-- TypeScript required a `types.d.ts` file to define min `qrcode` types
-- `tsconfig.json` configured for _CommonJS_ with `esModuleInterop`
-
----
-
-## 2. Migration to Deno
-
-| Node.js                  | Deno                                         |
-| ------------------------ | -------------------------------------------- |
-| `express` server         | Built-in `serve()` from `std/http/server.ts` |
-| `npm install qrcode`     | `import QRCode from "npm:qrcode"`            |
-| `tsconfig.json` needed   | Native TypeScript, minimal config            |
-| `package.json` scripts   | No npm scripts needed; use `deno run`        |
-| `__dirname` / path hacks | Optional `import.meta.url` adjustments       |
-| CommonJS module syntax   | ES Module syntax by default                  |
-
----
-
-## 3. Deno Setup
-
-### Install Deno
+## 🛠️ Deno Setup
 
 ```bash
+# You must install Deno on your local machine
+
 # macOS / Linux
 curl -fsSL https://deno.land/install.sh | sh
 
@@ -49,8 +19,44 @@ iwr https://deno.land/install.ps1 -useb | iex
 deno --version
 ```
 
-# 4. Run
+## ⚙️ Backend Progress
 
-```bash
-$ deno run --allow-net --allow-read app.ts
-```
+- Started with **Node.js + Express + TypeScript**
+- Fixed:
+  - missing/deprecated `@types/qrcode`
+  - TS module issues (`CommonJS` vs `ESM`)
+- Added custom `types.d.ts` for `qrcode` lib
+
+<br/>
+
+#### ➡️ Then migrated to Deno:
+
+- Replaced `Express` with Deno native `serve()`
+- Used `import QRCode from "npm:qrcode"`
+- Ran with: `deno run --allow-net --allow-read app.ts`
+- Implemented:
+  - API Endpoint: `POST /generate` → returns QR code (in base64 format)
+  - static file serving from `/public/**`
+
+#### 📝 Migration Summary
+
+| Node.js                  | Deno                                         |
+| ------------------------ | -------------------------------------------- |
+| `express` server         | Built-in `serve()` from `std/http/server.ts` |
+| `npm install qrcode`     | `import QRCode from "npm:qrcode"`            |
+| `tsconfig.json` needed   | Native TypeScript, minimal config            |
+| `package.json` scripts   | No npm scripts needed; use `deno run`        |
+| `__dirname` / path hacks | Optional `import.meta.url` adjustments       |
+| CommonJS module syntax   | ES Module syntax by default                  |
+
+## 🎨 Frontend Progress
+
+- Built a minimal **HTML/CSS/JS** UI
+- Upgraded it to:
+  - modern card layout
+  - gradient background
+  - Google font (Inter)
+  - WiFi illustration
+  - loading spinner animation
+  - fade-in QR display
+  - download QR button
