@@ -1,9 +1,5 @@
 import type { WifiSecurity } from "./types.ts";
 
-const getEnv = (key: string, fallback?: string): string => {
-  return Deno.env.get(key) ?? fallback ?? "";
-};
-
 export const config = {
   port: Number(getEnv("PORT", "3000")),
 
@@ -13,3 +9,7 @@ export const config = {
     defaultSecurity: getEnv("DEFAULT_SECURITY", "WPA") as WifiSecurity,
   },
 };
+
+function getEnv(key: string, fallback?: string): string {
+  return Deno.env.get(key) ?? fallback ?? "";
+}

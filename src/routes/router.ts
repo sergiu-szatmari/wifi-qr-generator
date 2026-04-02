@@ -1,4 +1,7 @@
 import { HttpHandler, IRouter, RouteDefinition } from "../types.ts";
+import { configHandler } from "./config.route.ts";
+import { healthHandler } from "./health.route.ts";
+import { qrHandler } from "./qr.route.ts";
 import { staticHandler } from "./static.route.ts";
 
 class Router implements IRouter {
@@ -46,4 +49,15 @@ class Router implements IRouter {
   }
 }
 
-export const router = new Router();
+function createRouter() {
+  const router = new Router();
+
+  // Register routes
+  router.get("/health", healthHandler);
+  router.get("/api/config", configHandler);
+  router.post("/api/qr", qrHandler);
+
+  return router;
+}
+
+export const router = createRouter();
