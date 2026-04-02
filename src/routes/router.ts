@@ -1,7 +1,7 @@
-import { HttpHandler, RouteDefinition } from "../types.ts";
+import { HttpHandler, IRouter, RouteDefinition } from "../types.ts";
 import { staticHandler } from "./static.route.ts";
 
-class Router {
+class Router implements IRouter {
   private routes: RouteDefinition[] = [];
 
   private register(routeDefinition: RouteDefinition) {
@@ -25,12 +25,6 @@ class Router {
   }
   public options(path: string, handler: HttpHandler) {
     this.register({ method: "OPTIONS", path, handler });
-  }
-
-  public find(request: Request): HttpHandler | undefined {
-    return this.routes.find(
-      ({ method, path }) => method === request.method && path === url.pathname,
-    )?.handler;
   }
 
   public async handle(request: Request) {

@@ -5,8 +5,9 @@ import { qrHandler } from "./qr.route.ts";
 
 export const registerRoutes = (router: IRouter): void => {
   router.get("/health", healthHandler);
-  router.post("/api/qr", qrHandler);
   router.get("/api/config", configHandler);
+
+  router.post("/api/qr", qrHandler);
 };
 
 export { router } from "./router.ts";
